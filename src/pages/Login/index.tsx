@@ -15,7 +15,7 @@ import Input from '../../components/Input';
 
 import styles from './Login.module.sass';
 
-import logo from '../../assets/logo.svg';
+import logo from '../../assets/logo-white.svg';
 import image from '../../assets/login.png';
 import Button from '../../components/Button';
 import api from '../../services/api';
@@ -72,10 +72,10 @@ const Login: React.FC = () => {
 
     const datas = {
       email: data.email,
-      pergunta_seguranca: data.pergunta,
+      pergunta_seguranca: String(answerSecurity),
       resposta: data.resposta,
     };
-
+    console.log(datas);
     try {
       const response = await api.post('/forgot', datas);
 
@@ -284,7 +284,7 @@ const Login: React.FC = () => {
         <aside className={`section ${styles.ilustration}`}>
           <nav className={styles.nav}>
             <Link className={styles.wrapper} to="/">
-              <img className={styles.logo} src={logo} alt="Logo Apprendy" />
+              <img className={styles.logo} src={logo} alt="Logo Apprenddy" />
             </Link>
           </nav>
           <img

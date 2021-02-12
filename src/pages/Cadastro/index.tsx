@@ -9,7 +9,7 @@ import Input from '../../components/Input';
 
 import styles from './Cadastro.module.sass';
 
-import logo from '../../assets/logo.svg';
+import logo from '../../assets/logo-white.svg';
 import image from '../../assets/cadastro.png';
 import Button from '../../components/Button';
 import api from '../../services/api';
@@ -111,7 +111,7 @@ const Cadastro: React.FC = () => {
               <div className={styles.formFooter}>
                 <Link to="/" className={`${styles.button} ${styles.outline}`}>
                   <MdUndo className={styles.icon} />
-                  Voltar para a home
+                  Voltar
                 </Link>
                 <Button type="submit" icon={MdSend}>
                   Cadastrar
@@ -129,7 +129,7 @@ const Cadastro: React.FC = () => {
         <aside className={`section ${styles.ilustration}`}>
           <nav className={styles.nav}>
             <Link className={styles.wrapper} to="/">
-              <img className={styles.logo} src={logo} alt="Logo Apprendy" />
+              <img className={styles.logo} src={logo} alt="Logo Apprenddy" />
             </Link>
           </nav>
           <img

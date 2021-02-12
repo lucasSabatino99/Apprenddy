@@ -1,10 +1,8 @@
 /* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
-import Switch from '../../components/Switch';
 import Card from '../../components/Card';
-import Pagination from '../../components/Pagination';
 import Footer from '../../components/Footer';
 
 import styles from './Search.module.sass';
@@ -15,8 +13,8 @@ interface CategoriesProps {
   descritivo: string;
 }
 
-interface TagsProps {
-  id_tag: number;
+interface FerramentasProps {
+  id_ferramenta: number;
   descritivo: string;
 }
 
@@ -28,76 +26,75 @@ interface PostProperties {
     ativo: boolean;
     data_publicacao: string;
     descricao: string;
+    ferramenta_descritivo: string;
+    icone: string;
   };
-  tag: Array<{
-    id_tag: number;
-    descritivo: string;
-  }>;
 }
 
 const Search: React.FC = () => {
   const params = useLocation();
+  console.log(params);
+
   const [categories, setCategories] = useState<Array<CategoriesProps>>([]);
-  const [tags, setTags] = useState<Array<TagsProps>>([]);
+  const [ferramentas, setFerramentas] = useState<Array<FerramentasProps>>([]);
   const [posts, setPosts] = useState<PostProperties[]>([]);
-  const [tagsSelecteds, setTagsSelecteds] = useState<Array<string>>([]);
 
   useEffect(() => {
     api.get('/categorias?limit=6').then(response => {
       setCategories(response.data);
     });
 
-    api.get('/tags?limit=10').then(response => {
-      setTags(response.data);
+    api.get('/ferramentas?limit=6').then(response => {
+      setFerramentas(response.data);
     });
   }, []);
 
   useEffect(() => {
     api
-      .get(`/conteudos/${params.search}`)
+      .get(`/conteudos/${params.search}&onlyActive=true`)
       .then(response => setPosts(response.data));
   }, [params.search]);
-
-  function handleSwitchTag(index: number, tag: any) {
-    console.log(index, tag);
-  }
 
   return (
     <>
       <Navbar logged admin />
       <main className={`${styles.gridHalf} ${styles.searchGrid}`}>
         <aside className={`${styles.section} ${styles.filters}`}>
-          <div className={styles.container}>
-            <div className={styles.filterGroup}>
-              <h2 className={styles.title}>Categorias</h2>
-              {categories.map((category, index) => (
-                <Switch
-                  key={category.id_categoria}
-                  name={category.descritivo}
-                  label={category.descritivo}
-                  isChecked={
-                    `?category=${category.id_categoria}` === params.search
-                  }
-                />
-              ))}
-            </div>
+          <div className={styles.filterGroup}>
+            <h2 className={styles.title}>Categorias</h2>
+            {categories.map((category, index) => (
+              <>
+                <Link
+                  to={`/search/?categoria=${category.id_categoria}`}
+                  className={styles.link}
+                >
+                  {category.descritivo}
+                </Link>
+                <div className={styles.divider} />
+              </>
+            ))}
+          </div>
 
-            <div className={styles.filterGroup}>
-              <h2 className={styles.title}>Tags</h2>
-              {tags.map((tag, index) => (
-                <Switch
-                  key={tag.id_tag}
-                  name={tag.descritivo}
-                  label={tag.descritivo}
-                  isChecked={`?tags=${tag.id_tag}` === params.search}
-                  onChange={() => handleSwitchTag(index, tag.id_tag)}
-                />
-              ))}
-            </div>
+          <div className={styles.filterGroup}>
+            <h2 className={styles.title}>Ferramentas</h2>
+            {ferramentas.map(ferramenta => (
+              <>
+                <Link
+                  to={`/search/?ferramenta=${ferramenta.id_ferramenta}`}
+                  className={styles.link}
+                >
+                  {ferramenta.descritivo}
+                </Link>
+                <div className={styles.divider} />
+              </>
+            ))}
           </div>
         </aside>
-        <section className={`${styles.section} ${styles.container}`}>
-          <div className={`${styles.gridAuto} ${styles.cardsGrid}`}>
+        <section
+          className={`${styles.section} ${styles.container} ${styles.content}`}
+        >
+          <h1 className={styles.pageTitle}>Resultados de busca</h1>
+          <div className={`${styles.gridAuto}`}>
             {posts.map(post => (
               <Card
                 key={post.publicacao.id_conteudo}
@@ -106,11 +103,14 @@ const Search: React.FC = () => {
                 title={post.publicacao.titulo}
                 date={post.publicacao.data_publicacao}
                 description={post.publicacao.descricao}
-                tags={post.tag}
+                ferramenta={{
+                  descritivo: String(post.publicacao.ferramenta_descritivo),
+                  icone: post.publicacao.icone,
+                }}
+                imageBg
               />
             ))}
           </div>
-          <Pagination pageCount={30} />
         </section>
       </main>
       <Footer />

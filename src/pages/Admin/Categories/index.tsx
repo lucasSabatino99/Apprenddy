@@ -35,14 +35,9 @@ const category: React.FC = () => {
         <section className={styles.section}>
           <div className={styles.container}>
             <div className={styles.header}>
-              <h1>Categorias</h1>
+              <h1 className={styles.title}>Categorias</h1>
               <Link to="/content/category">
-                <Button
-                  type="button"
-                  size="large"
-                  variant="contrast"
-                  icon={MdAdd}
-                >
+                <Button type="button" variant="contrast" icon={MdAdd}>
                   Criar Categoria
                 </Button>
               </Link>
@@ -61,13 +56,15 @@ const category: React.FC = () => {
                     <tr>
                       <td>{categoryContent.id_categoria}</td>
                       <td>{categoryContent.descritivo}</td>
-                      <td className={styles.actionsTd}>
-                        <Link
-                          to={`/post/${categoryContent.id_categoria}/edit`}
-                          className={styles.action}
-                        >
-                          <Button icon={MdEdit}>Editar</Button>
-                        </Link>
+                      <td>
+                        <div className={styles.actions}>
+                          <Link
+                            to={`/edit/category/${categoryContent.id_categoria}`}
+                            className={styles.action}
+                          >
+                            <Button icon={MdEdit}>Editar</Button>
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   ))}

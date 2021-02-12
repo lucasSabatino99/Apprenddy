@@ -25,6 +25,7 @@ const tools: React.FC = () => {
   useEffect(() => {
     api.get<Tools[]>('/ferramentas?limit=1000000').then(response => {
       setToolsContent(response.data);
+      console.log(response.data);
     });
   }, []);
 
@@ -36,14 +37,9 @@ const tools: React.FC = () => {
         <section className={styles.section}>
           <div className={styles.container}>
             <div className={styles.header}>
-              <h1>Ferramentas</h1>
+              <h1 className={styles.title}>Ferramentas</h1>
               <Link to="/content/tool">
-                <Button
-                  type="button"
-                  size="large"
-                  variant="contrast"
-                  icon={MdAdd}
-                >
+                <Button type="button" variant="contrast" icon={MdAdd}>
                   Criar Ferramenta
                 </Button>
               </Link>
@@ -60,17 +56,19 @@ const tools: React.FC = () => {
                 </thead>
                 <tbody>
                   {toolsContent.map(tool => (
-                    <tr>
+                    <tr key={tool.id_ferramenta}>
                       <td>{tool.id_ferramenta}</td>
                       <td>{tool.descritivo}</td>
                       <td>{tool.id_categoria}</td>
-                      <td className={styles.actionsTd}>
-                        <Link
-                          to={`/post/${tool.id_ferramenta}/edit`}
-                          className={styles.action}
-                        >
-                          <Button icon={MdEdit}>Editar</Button>
-                        </Link>
+                      <td>
+                        <div className={styles.actions}>
+                          <Link
+                            to={`/edit/tool/${tool.id_ferramenta}`}
+                            className={styles.action}
+                          >
+                            <Button icon={MdEdit}>Editar</Button>
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   ))}

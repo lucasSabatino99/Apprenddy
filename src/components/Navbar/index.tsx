@@ -1,17 +1,16 @@
 /* eslint-disable camelcase */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   MdSearch,
   MdAccountBox,
   MdPersonAdd,
   MdDashboard,
   MdAdd,
-  MdPeople,
-  MdChat,
   MdPowerSettingsNew,
 } from 'react-icons/md';
 import { Link, useHistory } from 'react-router-dom';
 import { Form } from '@unform/web';
+import { FormHandles } from '@unform/core';
 
 import Input from '../Input';
 import Button from '../Button';
@@ -45,15 +44,24 @@ const Navbar: React.FC<NavbarProps> = ({ logged }) => {
   const [sidenav, setSidenav] = useState(false);
   const [user, setUser] = useState<UserProperties>();
 
+  const formRef: any = useRef<FormHandles>(null);
+
+  const script = document.createElement('script');
+
+  script.src = '//code.jivosite.com/widget/nMKc2glgOW';
+  script.async = true;
+
+  document.body.appendChild(script);
+
   useEffect(() => {
     api.get('/users/home/info').then(response => {
       setUser(response.data);
     });
   }, []);
 
-  if (!user) {
-    return <p>Carregando.....</p>;
-  }
+  // if (!user) {
+  //   return <p>Carregando.....</p>;
+  // }
 
   const handleSidenav = () => {
     setSidenav(!sidenav);
@@ -61,10 +69,11 @@ const Navbar: React.FC<NavbarProps> = ({ logged }) => {
 
   function handleLogout() {
     logout();
+    window.location.href = 'http://localhost:3000/login';
   }
 
   const handleSubmit = (data: Record<string, unknown>) => {
-    history.push(`/search/${data.search}`);
+    history.push(`/search/?titulo=${data.search}`);
   };
 
   return (
@@ -72,55 +81,47 @@ const Navbar: React.FC<NavbarProps> = ({ logged }) => {
       <nav className={styles.navbar}>
         <div className={`container ${styles.navbarWrapper}`}>
           <Link to="/" className={styles.logoWrapper}>
-            <img className={styles.logo} src={logo} alt="Logo Apprendy" />
+            <img className={styles.logo} src={logo} alt="Logo Apprenddy" />
           </Link>
           <div className={`${styles.content} ${logged && styles.logged}`}>
-            <Form onSubmit={handleSubmit} className={styles.form}>
+            <Form ref={formRef} onSubmit={handleSubmit} className={styles.form}>
               <Input
                 name="search"
-                className={styles.input}
+                containerClass={styles.input}
                 type="text"
                 placeholder="Pesquisar"
-                select
-                selectOptions={[
-                  { value: 'recursos', label: 'Recursos', selected: true },
-                  { value: 'ferramentas', label: 'Ferramentas' },
-                  { value: 'categorias', label: 'Categorias' },
-                  { value: 'tags', label: 'Tags' },
-                ]}
                 button
                 buttonIcon={MdSearch}
               />
             </Form>
             <div className={styles.buttonsWrapper}>
-              {user.id_tipo === 3 && (
+              {user?.id_tipo !== 1 && (
                 <Link to="/admin/resources" className={styles.link}>
-                  Painel Adm
-                  {/* <Button type="button" variant="contrast" icon={MdDashboard}>
+                  <Button
+                    type="button"
+                    variant="transparent"
+                    icon={MdDashboard}
+                    className={styles.button}
+                  >
                     Painel adm
-                  </Button> */}
+                  </Button>
                 </Link>
               )}
-              <Link to="/comunity" className={styles.link}>
-                Comunidade
-                {/* <Button type="button" variant="outline" icon={MdPeople}>
-                  Comunidade
-                </Button> */}
-              </Link>
               {logged && (
-                <Link to="/content/resource" className={styles.linkButton}>
+                <Link to="/content/resource" className={styles.link}>
                   <Button
                     type="button"
                     disabled={!logged}
-                    variant="outline"
+                    variant="transparent"
                     icon={MdAdd}
+                    className={styles.button}
                   >
                     Publicar Recurso
                   </Button>
                 </Link>
               )}
             </div>
-            {logged ? (
+            {logged && (
               <button
                 type="button"
                 onClick={handleSidenav}
@@ -129,24 +130,13 @@ const Navbar: React.FC<NavbarProps> = ({ logged }) => {
                 <div className={styles.userButton}>
                   <img
                     className={styles.img}
-                    src={user.foto_perfil ? user.foto_perfil : userDefaultImage}
+                    src={
+                      user?.foto_perfil ? user?.foto_perfil : userDefaultImage
+                    }
                     alt="User avatar"
                   />
                 </div>
               </button>
-            ) : (
-              <>
-                <div className={styles.linksWrapper}>
-                  <Link to="/login" className={styles.link}>
-                    <Button icon={MdAccountBox}>Login</Button>
-                  </Link>
-                  <Link to="/cadastro" className={styles.link}>
-                    <Button icon={MdPersonAdd} variant="outline">
-                      Cadastre-se
-                    </Button>
-                  </Link>
-                </div>
-              </>
             )}
           </div>
         </div>
@@ -158,7 +148,7 @@ const Navbar: React.FC<NavbarProps> = ({ logged }) => {
               <li className={styles.userInfos}>
                 <div className={styles.userBackground}>
                   <img
-                    src={user.capa_perfil ? user.capa_perfil : background}
+                    src={user?.capa_perfil ? user.capa_perfil : background}
                     alt="background"
                     className={styles.img}
                   />
@@ -167,45 +157,31 @@ const Navbar: React.FC<NavbarProps> = ({ logged }) => {
                   <div className={styles.userImage}>
                     <img
                       src={
-                        user.foto_perfil ? user.foto_perfil : userDefaultImage
+                        user?.foto_perfil ? user.foto_perfil : userDefaultImage
                       }
                       alt="{ name }"
                       className={styles.img}
                     />
                   </div>
-                  <span className={styles.name}>{user.nome}</span>
+                  <span className={styles.name}>{user?.nome}</span>
                 </div>
               </li>
               <li className={styles.divider} />
               <li>
-                <Link to={`/user/${user.id_usuario}`} className={styles.link}>
+                <Link to={`/user/${user?.id_usuario}`} className={styles.link}>
                   <MdAccountBox className={styles.icon} />
                   Meu perfil
                 </Link>
               </li>
               <li className={styles.divider} />
               <li>
-                <Link to="/content/tag" className={styles.link}>
+                <Link to="/content/resource" className={styles.link}>
                   <MdAdd className={styles.icon} />
                   Criar conteúdo
                 </Link>
               </li>
               <li className={styles.divider} />
-              <li>
-                <Link to="/comunity" className={styles.link}>
-                  <MdPeople className={styles.icon} />
-                  Comunidade
-                </Link>
-              </li>
-              <li className={styles.divider} />
-              <li>
-                <Link to="/content/question" className={styles.link}>
-                  <MdChat className={styles.icon} />
-                  Fazer uma pergunta
-                </Link>
-              </li>
-              <li className={styles.divider} />
-              {user.id_tipo === 3 && (
+              {user?.id_tipo === 3 && (
                 <>
                   <li>
                     <Link to="/admin/resources" className={styles.link}>
@@ -217,14 +193,10 @@ const Navbar: React.FC<NavbarProps> = ({ logged }) => {
                 </>
               )}
               <li>
-                <Link
-                  to="/login"
-                  className={styles.link}
-                  onClick={handleLogout}
-                >
+                <div className={styles.link} onClick={handleLogout}>
                   <MdPowerSettingsNew className={styles.icon} />
                   Sair
-                </Link>
+                </div>
               </li>
               <li className={styles.divider} />
             </ul>

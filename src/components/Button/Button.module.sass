@@ -21,6 +21,16 @@
   &:last-child
     margin-right: 0
 
+  &:hover
+    background-color: darken($primary, 10%)
+
+  .icon
+    font-size: 16px
+    margin-right: 10px
+
+    &.noMargin
+      margin-right: 0
+
   &.large
     height: 40px
     padding: 0 22px
@@ -29,8 +39,11 @@
     .icon
       font-size: 18px
 
-  &:hover
-    background-color: darken($primary, 10%)
+  &.error
+    background-color: $error
+
+    &:hover
+      background-color: darken($error, 10%)
 
   &.outline
     height: 36px
@@ -39,13 +52,20 @@
     color: $primary
 
     &:hover
-      background-color: transparentize($primary, .9)
+      background-color: transparentize($primary, .8)
 
   &.contrast
     background-color: $contrast
 
     &:hover
       background-color: darken($contrast, 10%)
+
+  &.transparent
+    background-color: transparentize($primary, .9)
+    color: $primary
+
+    &:hover
+      background-color: transparentize($primary, .8)
 
   &:disabled, &.disabled
     background-color: $greyL3
@@ -55,10 +75,3 @@
     &:hover
       background-color: $greyL3
       color: $grey
-
-  .icon
-    font-size: 16px
-    margin-right: 10px
-
-    &.noMargin
-      margin-right: 0

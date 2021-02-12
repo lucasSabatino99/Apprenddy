@@ -20,6 +20,7 @@
 .postCard
   position: relative
   grid-template-columns: auto 1fr minmax(auto, 400px)
+  grid-auto-flow: column
   margin-top: calc( -100px - 2rem )
   z-index: 99
 
@@ -55,6 +56,37 @@
     .description
       font-size: $headingSize5
 
+    .tool
+      width: fit-content
+      display: flex
+      align-items: center
+      justify-content: flex-start
+      padding-right: 10px
+      border-radius: 10px
+      border-top-left-radius: 50px
+      border-bottom-left-radius: 50px
+      background-color: $greyL3
+
+      .iconeWrapper
+        display: flex
+        align-items: center
+        justify-content: center
+        width: 70px
+        height: 70px
+        overflow: hidden
+        border-radius: 50%
+        background-color: $light
+
+        .img
+          min-width: 100%
+          max-width: 120%
+          min-height: 100%
+          max-height: 120%
+
+      .toolName
+        margin-bottom: 0
+        margin-left: 10px
+
     .tagsWrapper
       display: flex
       align-items: center
@@ -80,13 +112,14 @@
         &:hover
           background-color: darken($contrast, 10%)
 
-  .button
+  .button, .shareButton
     position: absolute
     top: -30px
     right: 30px
     width: 60px
     height: 60px
     padding: 0
+    margin: 0
     border-radius: 50%
     background-color: $grey
     color: $greyL3
@@ -98,28 +131,54 @@
     .icon
       font-size: $headingSize6
 
+  .shareButton
+    right: 100px
+    background-color: $contrast
+
+    &:hover
+      background-color: darken($contrast, 10%)
+
 .content
-  .title, .text, .img
-    margin: 25px 0
+  word-wrap: break-word
 
-    &:first-child
-      margin-top: 0
+  &:first-child
+    margin-top: 0
 
-    &:last-child
-      margin-bottom: 0
+  &:last-child
+    margin-bottom: 0
 
-  .title
-    font-size: $headingSize4
-    color: $dark
+  p, span
+    line-height: 150%
 
-  .text
-    font-size: $textSizeBig
-    line-height: 1.5
-    text-align: justify
-
-  .img
-    width: 100%
+  img
+    max-width: 100%
     height: auto
+
+  table
+    width: 100%
+    margin-bottom: 1rem
+    background-color: transparent
+    border-collapse: collapse
+    border-spacing: 0
+    text-align: center
+    border: 3px solid $greyL2
+
+    tr
+      border-bottom: 3px solid $greyL2
+
+    th
+      padding: 1.5rem .75rem
+      font-size: 16px
+      background: $greyL2
+      vertical-align: inherit
+      font-weight: 700
+      text-transform: uppercase
+
+    td
+      font-size: 15px
+      padding: .75rem
+      vertical-align: middle
+      min-width: 124px
 
 .commentCard
   display: grid
@@ -151,6 +210,9 @@
     flex-direction: column
     align-items: flex-end
     justify-content: center
+
+    .input, .inputButton
+      height: 60px
 
     .textareaContainer
       flex: 1
