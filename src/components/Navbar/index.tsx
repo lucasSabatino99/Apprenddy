@@ -69,7 +69,7 @@ const Navbar: React.FC<NavbarProps> = ({ logged }) => {
 
   function handleLogout() {
     logout();
-    window.location.href = 'http://localhost:3000/login';
+    window.location.href = '/login';
   }
 
   const handleSubmit = (data: Record<string, unknown>) => {
