@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getToken } from '../auth/token';
 
 const api = axios.create({
-  baseURL: 'https://apprenddy.herokuapp.com/',
+  baseURL: 'https://apiapprendy.herokuapp.com/',
 });
 
 api.interceptors.request.use(async config => {
